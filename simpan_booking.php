@@ -12,19 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $nama_file_bukti = "";
 
-    // Logika upload file jika menggunakan metode Transfer
+    // Logika upload file ke direktori temporary Vercel (/tmp)
     if (strpos($payment_method, 'Transfer') !== false) {
         if (isset($_FILES['bukti_transfer']) && $_FILES['bukti_transfer']['error'] == 0) {
-            $target_dir = "uploads/";
-            
+            $target_dir = "/tmp/uploads/";
             if (!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
 
-            $extension = pathinfo($_FILES['bukti_transfer']['name'], PATHINFO_EXTENSION);
-            // Rename file secara unik berdasarkan waktu dan nomor HP agar tidak bentrok
+            $extension       = pathinfo($_FILES['bukti_transfer']['name'], PATHINFO_EXTENSION);
             $nama_file_bukti = "BUKTI_" . time() . "_" . $user_phone . "." . $extension;
-            $target_file = $target_dir . $nama_file_bukti;
+            $target_file     = $target_dir . $nama_file_bukti;
 
             if (!move_uploaded_file($_FILES['bukti_transfer']['tmp_name'], $target_file)) {
                 echo "<script>alert('Gagal mengupload file bukti gambar!'); window.history.back();</script>";
@@ -36,19 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // UPDATE: Query INSERT sekarang sudah memasukkan variabel $nama_file_bukti ke kolom bukti_transfer
+    // Insert ke tabel bookings
     $query_booking = "INSERT INTO bookings (user_name, user_phone, booking_date, total_price, payment_method, bukti_transfer, status) 
                       VALUES ('$user_name', '$user_phone', '$tanggal', '$total_price', '$payment_method', '$nama_file_bukti', 'Pending')";
     
     if (mysqli_query($koneksi, $query_booking)) {
         $booking_id = mysqli_insert_id($koneksi);
 
+        // Insert detail jam booking
         foreach ($jam_pilihan as $jam) {
+            $jam_sanitized = mysqli_real_escape_string($koneksi, $jam);
             mysqli_query($koneksi, "INSERT INTO booking_details (booking_id, field_id, start_hour) 
-                                    VALUES ('$booking_id', '$lapangan_id', '$jam')");
+                                    VALUES ('$booking_id', '$lapangan_id', '$jam_sanitized')");
         }
 
-        echo "<script>alert('Pemesanan Berhasil Disimpan! Status: Pending Menunggu Validasi Admin.'); window.location.href='index.php';</script>";
+        // DIALIKKAN KE RECEIPT DENGAN MEMBAWA ID BOOKING LEWAT URL
+        echo "<script>alert('Pemesanan Berhasil Disimpan!'); window.location.href='receipt.php?booking_id=$booking_id';</script>";
     } else {
         echo "Gagal menyimpan data: " . mysqli_error($koneksi);
     }
