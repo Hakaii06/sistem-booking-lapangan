@@ -1,21 +1,20 @@
 <?php
-// Mengabaikan laporan error standar bawaan PHP agar tidak merusak layout HTML di Vercel
-error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
-mysqli_report(MYSQLI_REPORT_OFF);
+// Mengaktifkan laporan error untuk mempermudah monitoring jaringan cloud
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Konfigurasi Database Lokal (XAMPP)
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "db_booking_lapangan"; 
+// Kredensial Database Cloud Aiven Sesuai Gambar Kamu
+$host     = "mysql-1ef6f5bb-haikalabdullah356-0cf1.l.aivencloud.com"; 
+$user     = "avnadmin";
+$password = "ISI_PASSWORD_AIVEN_KAMU_DISINI"; // <-- Ganti dengan password asli dari web Aiven
+$database = "defaultdb"; 
+$port     = 22954; 
 
-// Mencoba melakukan koneksi ke database dengan peredam error (@)
-$koneksi = @mysqli_connect($host, $user, $pass, $db);
+// Melakukan koneksi dengan menyertakan Port khusus Aiven
+$koneksi = mysqli_connect($host, $user, $password, $database, $port);
 
-// Menentukan status koneksi untuk digunakan di file index
+// Validasi koneksi
 if (!$koneksi) {
-    $database_error_mode = true;
-} else {
-    $database_error_mode = false;
+    die("Koneksi Database Cloud Gagal: " . mysqli_connect_error());
 }
 ?>
