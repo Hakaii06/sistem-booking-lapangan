@@ -1,16 +1,16 @@
 {
   "functions": {
+    "api/**/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
     "*.php": {
-      "runtime": "vercel-php@0.7.1"
+      "runtime": "vercel-php@0.7.2"
     }
   },
   "routes": [
-    { "src": "/index", "dest": "/index.php" },
-    { "src": "/proses_booking", "dest": "/proses_booking.php" },
-    { "src": "/proses_pembayaran", "dest": "/proses_pembayaran.php" },
-    { "src": "/simpan_booking", "dest": "/simpan_booking.php" },
-    { "src": "/receipt", "dest": "/receipt.php" },
-    { "src": "/admin", "dest": "/admin.php" },
-    { "src": "/(.*)", "dest": "/$1" }
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
