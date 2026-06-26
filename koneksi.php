@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 // Kredensial Database Cloud Aiven Sesuai Gambar Kamu
 $host     = "mysql-1ef6f5bb-haikalabdullah356-0cf1.l.aivencloud.com"; 
 $user     = "avnadmin";
-$password = "ISI_PASSWORD_AIVEN_KAMU_DISINI"; // <-- Ganti dengan password asli dari web Aiven
+$password = "AVNS_mj_9TgmHIR6WUNfbdfG"; // <-- Ganti dengan password asli dari web Aiven
 $database = "defaultdb"; 
 $port     = 22954; 
 
