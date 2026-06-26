@@ -1,23 +1,12 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "index.php",
-      "use": "vercel-php@0.7.1"
-    },
-    {
-      "src": "admin.php",
-      "use": "vercel-php@0.7.1"
-    },
-    {
-      "src": "proses_pembayaran.php",
-      "use": "vercel-php@0.7.1"
+  "functions": {
+    "*.php": {
+      "runtime": "vercel-php@0.7.1"
     }
-  ],
+  },
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "index.php"
-    }
+    { "src": "/index", "dest": "/index.php" },
+    { "src": "/simpan_booking", "dest": "/simpan_booking.php" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
